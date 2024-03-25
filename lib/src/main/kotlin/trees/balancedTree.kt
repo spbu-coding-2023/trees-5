@@ -3,9 +3,7 @@ package trees
 import nodes.abstractNode
 
 abstract class balancedTree<K: Comparable<K>, V, someNode: abstractNode<K, V, someNode>>: abstractTree<K, V, someNode>() {
-    protected abstract fun balanceAfterInsert(curNode: someNode)
-
-    protected abstract fun balanceAfterDelete(curNode: someNode)
+    protected abstract fun balance(curNode: someNode, isAfterInsert: Boolean = true)
 
     protected open fun rotateRight(node: someNode, parentNode:  someNode?) {
         val tempNode = node.leftChild ?: throw IllegalArgumentException("Node must have left child for right rotation")
