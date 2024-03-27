@@ -13,9 +13,25 @@ class AVLTree<K : Comparable<K>, V>: balancedTree<K, V, AVLNode<K, V>>() {
     }
 
     override fun delete(key: K) {
-        val deletedNodeParent = deleteNode(key)
-        /* if nothing was added or tree is empty, there's no need to balance it */
-        deletedNodeParent?.let { balance(it) }
+        val nodeToDelete = findNodeByKey(key)
+        if (nodeToDelete != null) {
+            val deletedNodeParent = findParent(nodeToDelete)
+            val newNode = deleteNode(key)
+            /* deleting a leaf */
+            if (newNode == null) {
+                deletedNodeParent?.let { balance(it) }
+            }
+            /* deleting a node with 1 child */
+            else if (nodeToDelete.leftChild == null || nodeToDelete.rightChild == null) {
+                balance(newNode)
+            }
+            /* deleting a node with 2 children */
+            else {
+                val newNodeParent = findMinNodeInRight(newNode.rightChild)
+                if (newNodeParent != null) balance(newNodeParent)
+                else balance(newNode)
+            }
+        }
     }
 
     private fun getHeight(node: AVLNode<K, V>?): Int {
