@@ -98,7 +98,7 @@ abstract class abstractTree<K: Comparable<K>, V, someNode: abstractNode<K, V, so
         }
     }
 
-    private fun findMinNodeInRight(subtree: someNode?): someNode? {
+    protected fun findMinNodeInRight(subtree: someNode?): someNode? {
         var minNode = subtree
         while (true) {
             minNode = minNode?.leftChild ?: break
@@ -113,7 +113,7 @@ abstract class abstractTree<K: Comparable<K>, V, someNode: abstractNode<K, V, so
         return findNodeByKey(key)?.value
     }
 
-    private fun findNodeByKey(key: K): someNode? {
+    protected fun findNodeByKey(key: K): someNode? {
         var curNode: someNode? = root ?: return null
         while (curNode != null) {
             curNode = when {
