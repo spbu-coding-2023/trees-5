@@ -1,0 +1,4 @@
+package trees
+
+class RBTree {
+}
