@@ -17,15 +17,15 @@ class AVLTree<K : Comparable<K>, V>: balancedTree<K, V, AVLNode<K, V>>() {
         if (nodeToDelete != null) {
             val deletedNodeParent = findParent(nodeToDelete)
             val newNode = deleteNode(key)
-            /* deleting a leaf */
+            /* no children case */
             if (newNode == null) {
                 deletedNodeParent?.let { balance(it) }
             }
-            /* deleting a node with 1 child */
+            /* 1 child case */
             else if (nodeToDelete.leftChild == null || nodeToDelete.rightChild == null) {
                 balance(newNode)
             }
-            /* deleting a node with 2 children */
+            /* 2 children case */
             else {
                 val newNodeParent = findMinNodeInRight(newNode.rightChild)
                 if (newNodeParent != null) balance(newNodeParent)
@@ -71,5 +71,13 @@ class AVLTree<K : Comparable<K>, V>: balancedTree<K, V, AVLNode<K, V>>() {
     override fun rotateLeft (node: AVLNode<K, V>, parentNode:  AVLNode<K, V>?) {
         super.rotateLeft(node, parentNode)
         updateHeight(node)
+    }
+
+    fun preorderTraverse(): List<Pair<K, Int>> {
+        val listOfNodes = mutableListOf<AVLNode<K, V>>()
+        traverse(root, listOfNodes)
+        val listOfKeysAndHeights = mutableListOf<Pair<K, Int>>()
+        listOfNodes.forEach { listOfKeysAndHeights.add(Pair(it.key, it.height)) }
+        return listOfKeysAndHeights
     }
 }
