@@ -13,9 +13,25 @@ class AVLTree<K : Comparable<K>, V>: balancedTree<K, V, AVLNode<K, V>>() {
     }
 
     override fun delete(key: K) {
-        val deletedNodeParent = deleteNode(key)
-        /* if nothing was added or tree is empty, there's no need to balance it */
-        deletedNodeParent?.let { balance(it) }
+        val nodeToDelete = findNodeByKey(key)
+        if (nodeToDelete != null) {
+            val deletedNodeParent = findParent(nodeToDelete)
+            val newNode = deleteNode(key)
+            /* no children case */
+            if (newNode == null) {
+                deletedNodeParent?.let { balance(it) }
+            }
+            /* 1 child case */
+            else if (nodeToDelete.leftChild == null || nodeToDelete.rightChild == null) {
+                balance(newNode)
+            }
+            /* 2 children case */
+            else {
+                val newNodeParent = findMinNodeInRight(newNode.rightChild)
+                if (newNodeParent != null) balance(newNodeParent)
+                else balance(newNode)
+            }
+        }
     }
 
     private fun getHeight(node: AVLNode<K, V>?): Int {
@@ -55,5 +71,13 @@ class AVLTree<K : Comparable<K>, V>: balancedTree<K, V, AVLNode<K, V>>() {
     override fun rotateLeft (node: AVLNode<K, V>, parentNode:  AVLNode<K, V>?) {
         super.rotateLeft(node, parentNode)
         updateHeight(node)
+    }
+
+    fun preorderTraverse(): List<Pair<K, Int>> {
+        val listOfNodes = mutableListOf<AVLNode<K, V>>()
+        traverse(root, listOfNodes)
+        val listOfKeysAndHeights = mutableListOf<Pair<K, Int>>()
+        listOfNodes.forEach { listOfKeysAndHeights.add(Pair(it.key, it.height)) }
+        return listOfKeysAndHeights
     }
 }
