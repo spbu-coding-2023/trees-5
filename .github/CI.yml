@@ -1,0 +1,14 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  Tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
