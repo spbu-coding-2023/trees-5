@@ -107,7 +107,197 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
         }
         return
     }
+    override fun delete(key: K) {
+        val nodeToDelete = findNodeByKey(key)
+        nodeToDelete?.let { balance(nodeToDelete, false) }
+    }
+    private fun deleteLeaf(node: RBNode<K, V>) {
+        println("deleting leaf")
+        if (node.color != Color.RED) deleteCase1(node)
+    }
+
     private fun balanceAfterDelete(curNode: RBNode<K, V>) {
-        TODO("Not yet implemented")
+        val nodeToDelete = curNode
+        val child: RBNode<K, V> ?
+        when {
+            nodeToDelete.rightChild != null && nodeToDelete.leftChild != null -> {
+                child = findMinNodeInRight(nodeToDelete.rightChild)
+                    ?: throw IllegalArgumentException("Node must have right child")
+                val newNode = child
+                println("delete node with 2 children")
+                delete(child.key)
+                newNode.color = nodeToDelete.color
+                newNode.leftChild = nodeToDelete.leftChild
+                newNode.rightChild = nodeToDelete.rightChild
+                moveParentNode(nodeToDelete, findParent(nodeToDelete), newNode)
+                return
+
+            }
+            nodeToDelete.rightChild != null -> {
+                println("delete node with right child")
+                child = nodeToDelete.rightChild
+            }
+            nodeToDelete.leftChild != null -> {
+                println("delete node with left child")
+                child = nodeToDelete.leftChild
+            }
+            else -> {
+                child = null
+                deleteLeaf(nodeToDelete)
+            }
+        }
+
+        if(nodeToDelete.color == Color.RED) {
+            println("delete red node")
+            deleteNode(nodeToDelete.key)
+            return
+        }
+
+        if(nodeToDelete.color == Color.BLACK && child?.color == Color.RED) {
+            println("delete black node with red child")
+            deleteNode(nodeToDelete.key)
+            child.color = Color.BLACK
+            return
+        }
+        else {
+//        if(nodeToDelete.color == Color.BLACK && child?.color == Color.BLACK) {
+            println("delete black node with black child")
+            deleteNode(nodeToDelete.key)
+            if (child != null) deleteCase1(child)
+        }
+    }
+
+    /* child of nodeToDelete is new root */
+    private fun deleteCase1(node: RBNode<K, V>) {
+        println("case 1")
+        val parent = findParent(node)
+        if(parent != null) deleteCase2(node)
+    }
+
+
+    /** sibling of child is red
+     *          BLACK
+     *        /       \
+     *      child     RED
+     */
+    private fun deleteCase2(curNode: RBNode<K, V>) {
+        var node = curNode
+        val sibling = getSibling(node)
+        if(sibling?.color == Color.RED) {
+            val parent = findParent(node) ?: throw IllegalArgumentException("Parent cannot be null")
+            parent.color = Color.RED
+            sibling.color = Color.BLACK
+            if (node == parent.leftChild) {
+                println("case 2.1")
+                val grandparent = getGrandparent(node)
+                rotateLeft(parent, grandparent)
+            }
+            else {
+                println("case 2.2")
+                val grandparent = getGrandparent(node)
+                rotateRight(parent, grandparent)
+            }
+        }
+        deleteCase3(node)
+    }
+
+    /** parent, sibling and its children are black
+     *       BLACK
+     *     /       \
+     *   child    BLACK
+     *          /       \
+     *       BLACK     BLACK
+     */
+    private fun deleteCase3(node: RBNode<K, V>) {
+        val sibling = getSibling(node)
+        val parent = findParent(node) ?: throw IllegalArgumentException("Parent cannot be null")
+        if(parent.color == Color.BLACK && (sibling?.color == Color.BLACK) &&
+            (sibling.rightChild?.color == Color.BLACK || sibling.rightChild == null)
+            && (sibling.leftChild?.color == Color.BLACK || sibling.leftChild == null)) {
+            println("case 3")
+
+            sibling.color = Color.RED
+            deleteCase1(parent)
+        }
+        else deleteCase4(node)
+    }
+
+    /** parent is red, sibling and its children are black
+     *       RED
+     *     /    \
+     *   child  BLACK
+     *         /    \
+     *     BLACK     BLACK
+     */
+    private fun deleteCase4(node: RBNode<K, V>) {
+        val sibling = getSibling(node)
+        val parent = findParent(node) ?: throw IllegalArgumentException("Parent cannot be null")
+        if(parent.color == Color.RED && sibling?.color == Color.BLACK &&
+            (sibling.rightChild?.color == Color.BLACK || sibling.rightChild == null)
+            && (sibling.leftChild?.color == Color.BLACK || sibling.leftChild == null)) {
+            println("case 4")
+
+            sibling.color = Color.RED
+            parent.color = Color.BLACK
+        }
+        else deleteCase5(node)
+    }
+
+    /** sibling is black & leftChild, its leftChild is red and its rightChild is black
+     *             parent
+     *             /    \
+     *          BLACK  child
+     *         /    \
+     *       RED   BLACK
+     */
+    private fun deleteCase5(node: RBNode<K, V>) {
+        val sibling = getSibling(node) ?: throw IllegalArgumentException("Sibling cannot be null")
+        val parent = findParent(node) ?: throw IllegalArgumentException("Parent cannot be null")
+        if (node == parent.leftChild && sibling.color == Color.BLACK &&
+            (sibling.rightChild?.color == Color.BLACK || sibling.rightChild == null) && sibling.leftChild?.color == Color.RED) {
+            println("case 5.1")
+            sibling.color = Color.RED
+            sibling.leftChild?.color = Color.BLACK
+
+            rotateRight(sibling, parent)
+        }
+        else if (node == parent.rightChild && sibling.color == Color.BLACK &&
+            sibling.rightChild?.color == Color.RED && (sibling.leftChild?.color == Color.BLACK || sibling.leftChild == null)) {
+            println("case 5.2")
+
+            sibling.color = Color.RED
+            sibling.rightChild?.color = Color.BLACK
+
+            rotateLeft(sibling, parent)
+        }
+        deleteCase6(node)
+    }
+
+    /** sibling is right(left)Child and is black, its right(left)Child is red
+     *              parent       or          parent
+     *             /     \                  /     \
+     *          child  BLACK            BLACK    child
+     *                     \             /
+     *                     RED         RED
+     */
+    private fun deleteCase6(node: RBNode<K, V>) {
+        //val node = curNode
+        val sibling = getSibling(node) ?: throw IllegalArgumentException("Sibling cannot be null")
+        val parent = findParent(node) ?: throw IllegalArgumentException("Parent cannot be null")
+        val grandparent = getGrandparent(node)
+        val color = parent.color
+        sibling.color = color
+        parent.color = Color.BLACK
+
+        if (node == parent.leftChild) {
+            println("case 6.1")
+            sibling.rightChild?.color = Color.BLACK
+            rotateLeft(parent, grandparent)
+        }
+        else {
+            println("case 6.2")
+            sibling.leftChild?.color = Color.BLACK
+            rotateRight(parent, grandparent)
+        }
     }
 }
