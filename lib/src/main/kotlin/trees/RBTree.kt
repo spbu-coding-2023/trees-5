@@ -32,9 +32,7 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
         val insertedNode = insertNode(key, value) ?: throw IllegalArgumentException("Nothing to insert")
         balance(insertedNode, true)
     }
-    override fun createNewNode(key: K, value: V): RBNode<K, V> {
-        TODO("Not yet implemented")
-    }
+    override fun createNewNode(key: K, value: V): RBNode<K, V> = RBNode(key, value)
 
     override fun balance(curNode: RBNode<K, V>, isAfterInsert: Boolean) {
         if (isAfterInsert) { balanceAfterInsert(curNode)}
@@ -112,7 +110,6 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
         nodeToDelete?.let { balance(nodeToDelete, false) }
     }
     private fun deleteLeaf(node: RBNode<K, V>) {
-        println("deleting leaf")
         if (node.color != Color.RED) deleteCase1(node)
     }
 
@@ -129,16 +126,14 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
                 newNode.color = nodeToDelete.color
                 newNode.leftChild = nodeToDelete.leftChild
                 newNode.rightChild = nodeToDelete.rightChild
-                moveParentNode(nodeToDelete, findParent(nodeToDelete), newNode)
+                changeChild(nodeToDelete, findParent(nodeToDelete), newNode)
                 return
 
             }
             nodeToDelete.rightChild != null -> {
-                println("delete node with right child")
                 child = nodeToDelete.rightChild
             }
             nodeToDelete.leftChild != null -> {
-                println("delete node with left child")
                 child = nodeToDelete.leftChild
             }
             else -> {
@@ -148,20 +143,16 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
         }
 
         if(nodeToDelete.color == Color.RED) {
-            println("delete red node")
             deleteNode(nodeToDelete.key)
             return
         }
 
         if(nodeToDelete.color == Color.BLACK && child?.color == Color.RED) {
-            println("delete black node with red child")
             deleteNode(nodeToDelete.key)
             child.color = Color.BLACK
             return
         }
         else {
-//        if(nodeToDelete.color == Color.BLACK && child?.color == Color.BLACK) {
-            println("delete black node with black child")
             deleteNode(nodeToDelete.key)
             if (child != null) deleteCase1(child)
         }
@@ -169,7 +160,6 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
 
     /* child of nodeToDelete is new root */
     private fun deleteCase1(node: RBNode<K, V>) {
-        println("case 1")
         val parent = findParent(node)
         if(parent != null) deleteCase2(node)
     }
@@ -188,12 +178,10 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
             parent.color = Color.RED
             sibling.color = Color.BLACK
             if (node == parent.leftChild) {
-                println("case 2.1")
                 val grandparent = getGrandparent(node)
                 rotateLeft(parent, grandparent)
             }
             else {
-                println("case 2.2")
                 val grandparent = getGrandparent(node)
                 rotateRight(parent, grandparent)
             }
@@ -214,7 +202,6 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
         if(parent.color == Color.BLACK && (sibling?.color == Color.BLACK) &&
             (sibling.rightChild?.color == Color.BLACK || sibling.rightChild == null)
             && (sibling.leftChild?.color == Color.BLACK || sibling.leftChild == null)) {
-            println("case 3")
 
             sibling.color = Color.RED
             deleteCase1(parent)
@@ -235,7 +222,6 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
         if(parent.color == Color.RED && sibling?.color == Color.BLACK &&
             (sibling.rightChild?.color == Color.BLACK || sibling.rightChild == null)
             && (sibling.leftChild?.color == Color.BLACK || sibling.leftChild == null)) {
-            println("case 4")
 
             sibling.color = Color.RED
             parent.color = Color.BLACK
@@ -255,7 +241,6 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
         val parent = findParent(node) ?: throw IllegalArgumentException("Parent cannot be null")
         if (node == parent.leftChild && sibling.color == Color.BLACK &&
             (sibling.rightChild?.color == Color.BLACK || sibling.rightChild == null) && sibling.leftChild?.color == Color.RED) {
-            println("case 5.1")
             sibling.color = Color.RED
             sibling.leftChild?.color = Color.BLACK
 
@@ -263,7 +248,6 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
         }
         else if (node == parent.rightChild && sibling.color == Color.BLACK &&
             sibling.rightChild?.color == Color.RED && (sibling.leftChild?.color == Color.BLACK || sibling.leftChild == null)) {
-            println("case 5.2")
 
             sibling.color = Color.RED
             sibling.rightChild?.color = Color.BLACK
@@ -290,12 +274,10 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
         parent.color = Color.BLACK
 
         if (node == parent.leftChild) {
-            println("case 6.1")
             sibling.rightChild?.color = Color.BLACK
             rotateLeft(parent, grandparent)
         }
         else {
-            println("case 6.2")
             sibling.leftChild?.color = Color.BLACK
             rotateRight(parent, grandparent)
         }
