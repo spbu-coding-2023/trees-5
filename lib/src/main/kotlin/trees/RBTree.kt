@@ -300,4 +300,11 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
             rotateRight(parent, grandparent)
         }
     }
+    fun preorderTraverse(): List<Pair<K, Color>> {
+        val listOfNodes = mutableListOf<RBNode<K, V>>()
+        traverse(root, listOfNodes)
+        val listOfKeysAndColors = mutableListOf<Pair<K, Color>>()
+        listOfNodes.forEach { listOfKeysAndColors.add(Pair(it.key, it.color)) }
+        return listOfKeysAndColors
+    }
 }
