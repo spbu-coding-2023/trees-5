@@ -1,6 +1,6 @@
 package treesTests
 
-import AVLTree
+import trees.AVLTree
 import org.junit.jupiter.api.Assertions.assertEquals
 import kotlin.test.Test
 
@@ -112,19 +112,16 @@ class AVLTreeTest {
 
     @Test
     fun `delete node with non-existing key`() {
-        @Test
-        fun `delete node with non-existing key`() {
-            val tree = AVLTree<Int, String>()
-            tree.insert(10, "Half")
-            tree.insert(20, "Cherry")
-            tree.insert(30, "Half")
-            tree.insert(45, "Coke")
-            tree.delete(15)
+        val tree = AVLTree<Int, String>()
+        tree.insert(10, "Half")
+        tree.insert(20, "Cherry")
+        tree.insert(30, "Half")
+        tree.insert(45, "Coke")
+        tree.delete(15)
 
-            val expectedKeysAndHeights = listOf(Pair(20, 3), Pair(10, 1), Pair(30, 2), Pair(45, 1))
-            val actualKeysAndHeights = tree.preorderTraverse()
-            assertEquals(expectedKeysAndHeights, actualKeysAndHeights)
-        }
+        val expectedKeysAndHeights = listOf(Pair(20, 3), Pair(10, 1), Pair(30, 2), Pair(45, 1))
+        val actualKeysAndHeights = tree.preorderTraverse()
+        assertEquals(expectedKeysAndHeights, actualKeysAndHeights)
     }
 
     @Test

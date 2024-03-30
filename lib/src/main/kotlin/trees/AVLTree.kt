@@ -1,5 +1,6 @@
+package trees
+
 import nodes.AVLNode
-import trees.balancedTree
 import kotlin.math.max
 
 class AVLTree<K : Comparable<K>, V>: balancedTree<K, V, AVLNode<K, V>>() {

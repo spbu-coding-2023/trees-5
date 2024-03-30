@@ -1,7 +1,7 @@
+package trees
+
 import nodes.Color
 import nodes.RBNode
-import trees.balancedTree
-
 
 class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
     private fun getGrandparent(node: RBNode<K, V>): RBNode<K, V>? {
@@ -121,7 +121,6 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
                 child = findMinNodeInRight(nodeToDelete.rightChild)
                     ?: throw IllegalArgumentException("Node must have right child")
                 val newNode = child
-                println("delete node with 2 children")
                 delete(child.key)
                 newNode.color = nodeToDelete.color
                 newNode.leftChild = nodeToDelete.leftChild
@@ -265,7 +264,6 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
      *                     RED         RED
      */
     private fun deleteCase6(node: RBNode<K, V>) {
-        //val node = curNode
         val sibling = getSibling(node) ?: throw IllegalArgumentException("Sibling cannot be null")
         val parent = findParent(node) ?: throw IllegalArgumentException("Parent cannot be null")
         val grandparent = getGrandparent(node)
