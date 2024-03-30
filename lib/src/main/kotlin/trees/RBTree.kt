@@ -36,7 +36,13 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
     }
 
     override fun balance(curNode: RBNode<K, V>, isAfterInsert: Boolean) {
+        if (isAfterInsert) { balanceAfterInsert(curNode)}
+        else { balanceAfterDelete(curNode) }
+    }
+    private fun balanceAfterInsert(curNode: RBNode<K, V>) {
         TODO("Not yet implemented")
     }
-
+    private fun balanceAfterDelete(curNode: RBNode<K, V>) {
+        TODO("Not yet implemented")
+    }
 }
