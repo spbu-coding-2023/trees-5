@@ -27,3 +27,6 @@ jobs:
 
       - name: Run autotests
         run: ./gradlew test
+
+      - name: Run Test Coverage
+        run: ./gradlew jacocoTestReport
