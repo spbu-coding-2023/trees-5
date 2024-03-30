@@ -137,15 +137,7 @@ abstract class abstractTree<K: Comparable<K>, V, someNode: abstractNode<K, V, so
         return null
     }
 
-    fun preorderTraverse(): List<K> {
-        val listOfNodes = mutableListOf<someNode>()
-        traverse(root, listOfNodes)
-        val listOfKeys = mutableListOf<K>()
-        listOfNodes.forEach { listOfKeys.add(it.key) }
-        return listOfKeys
-    }
-
-    private fun traverse(curNode: someNode?, listOfNodes: MutableList<someNode>) {
+    protected fun traverse(curNode: someNode?, listOfNodes: MutableList<someNode>) {
         if(curNode != null) {
             listOfNodes.add(curNode)
             traverse(curNode.leftChild, listOfNodes)
