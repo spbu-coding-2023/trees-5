@@ -16,21 +16,29 @@ class AVLTree<K : Comparable<K>, V>: balancedTree<K, V, AVLNode<K, V>>() {
         val nodeToDelete = findNodeByKey(key)
         if (nodeToDelete != null) {
             val deletedNodeParent = findParent(nodeToDelete)
+            val childrenNum = getNumberOfChildren(nodeToDelete)
             val newNode = deleteNode(key)
-            /* no children case */
+            /* deleting a leaf */
             if (newNode == null) {
                 deletedNodeParent?.let { balance(it) }
             }
-            /* 1 child case */
-            else if (nodeToDelete.leftChild == null || nodeToDelete.rightChild == null) {
+            else if (childrenNum == 1) {
                 balance(newNode)
             }
-            /* 2 children case */
+            /* deleting a node with 2 children */
             else {
                 val newNodeParent = findMinNodeInRight(newNode.rightChild)
                 if (newNodeParent != null) balance(newNodeParent)
                 else balance(newNode)
             }
+        }
+    }
+
+    private fun getNumberOfChildren(node: AVLNode<K, V>): Int {
+        return when {
+            node.leftChild != null && node.rightChild != null -> 2
+            node.leftChild != null || node.rightChild != null -> 1
+            else -> 0
         }
     }
 
