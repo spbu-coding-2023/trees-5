@@ -14,36 +14,40 @@ abstract class abstractTree<K: Comparable<K>, V, someNode: abstractNode<K, V, so
     protected fun insertNode(key: K, value: V): someNode? {
         val nodeToInsert = createNewNode(key, value)
         var curNode = root
+
         if (curNode == null) {
             root = nodeToInsert
             return root
         }
-        else {
-            while ((curNode != null) && (curNode != nodeToInsert)) {
-                when {
-                    (curNode.key == nodeToInsert.key) -> {
-                        curNode.value = nodeToInsert.value
-                        println("existing key entered. data has been changed")
-                        break
-                    }
-                    ((curNode.leftChild == null) && (nodeToInsert.key < curNode.key)) -> {
-                        curNode.leftChild = nodeToInsert
-                        curNode = curNode.leftChild
-                    }
-                    ((curNode.rightChild == null) && (nodeToInsert.key > curNode.key)) -> {
-                        curNode.rightChild = nodeToInsert
-                        curNode = curNode.rightChild
-                    }
-                    nodeToInsert.key < curNode.key -> {
-                        curNode = curNode.leftChild
-                    }
-                    nodeToInsert.key > curNode.key -> {
-                        curNode = curNode.rightChild
-                    }
+
+        while ((curNode != null) && (curNode != nodeToInsert)) {
+            when {
+                (curNode.key == nodeToInsert.key) -> {
+                    curNode.value = nodeToInsert.value
+                    break
+                }
+
+                ((curNode.leftChild == null) && (nodeToInsert.key < curNode.key)) -> {
+                    curNode.leftChild = nodeToInsert
+                    curNode = curNode.leftChild
+                }
+
+                ((curNode.rightChild == null) && (nodeToInsert.key > curNode.key)) -> {
+                    curNode.rightChild = nodeToInsert
+                    curNode = curNode.rightChild
+                }
+
+                nodeToInsert.key < curNode.key -> {
+                    curNode = curNode.leftChild
+                }
+
+                nodeToInsert.key > curNode.key -> {
+                    curNode = curNode.rightChild
                 }
             }
-            return curNode
         }
+        return curNode
+
     }
 
     open fun delete(key: K) {
@@ -54,35 +58,35 @@ abstract class abstractTree<K: Comparable<K>, V, someNode: abstractNode<K, V, so
         val nodeToDelete = findNodeByKey(key)
         if ((nodeToDelete == null) || (root == null)) return null
         val parentNode = findParent(nodeToDelete)
-        /* no children case */
-        if (nodeToDelete.leftChild == null && nodeToDelete.rightChild == null) {
-            moveParentNode(nodeToDelete, parentNode, null)
-            /* new */
-            return null
-        }
-        /* 1 child case */
-        else if (nodeToDelete.leftChild == null || nodeToDelete.rightChild == null) {
-            if (nodeToDelete.leftChild == null) {
-                moveParentNode(nodeToDelete, parentNode, nodeToDelete.rightChild)
-                /* new */
-                return nodeToDelete.rightChild
+        when {
+            /* no children case */
+            (nodeToDelete.leftChild == null && nodeToDelete.rightChild == null) -> {
+                changeChild(nodeToDelete, parentNode, null)
+                return null
             }
-            else {
-                moveParentNode(nodeToDelete, parentNode, nodeToDelete.leftChild)
-                /* new */
-                return nodeToDelete.leftChild
+
+            /* 1 child case */
+            (nodeToDelete.leftChild == null || nodeToDelete.rightChild == null) -> {
+                if (nodeToDelete.leftChild == null) {
+                    changeChild(nodeToDelete, parentNode, nodeToDelete.rightChild)
+                    return nodeToDelete.rightChild
+                }
+                else {
+                    changeChild(nodeToDelete, parentNode, nodeToDelete.leftChild)
+                    return nodeToDelete.leftChild
+                }
             }
-        }
-        /* 2 children case */
-        else {
-            val replacementNode = findMinNodeInRight(nodeToDelete.rightChild)
-                ?: throw IllegalArgumentException ("Node with 2 children must have a right child")
-            moveParentNode(replacementNode, findParent(replacementNode), replacementNode.rightChild)
-            replacementNode.leftChild = nodeToDelete.leftChild
-            replacementNode.rightChild = nodeToDelete.rightChild
-            moveParentNode(nodeToDelete, parentNode, replacementNode)
-            /* new */
-            return replacementNode
+
+            /* 2 children case */
+            else -> {
+                val replacementNode = findMinNodeInRight(nodeToDelete.rightChild)
+                    ?: throw IllegalArgumentException ("Node with 2 children must have a right child")
+                changeChild(replacementNode, findParent(replacementNode), replacementNode.rightChild)
+                replacementNode.leftChild = nodeToDelete.leftChild
+                replacementNode.rightChild = nodeToDelete.rightChild
+                changeChild(nodeToDelete, parentNode, replacementNode)
+                return replacementNode
+            }
         }
     }
 
@@ -99,8 +103,13 @@ abstract class abstractTree<K: Comparable<K>, V, someNode: abstractNode<K, V, so
         return null
     }
 
-    /* moves parent of a node to point to a different node instead */
-    protected fun moveParentNode(node: someNode, parentNode: someNode?, replacementNode: someNode?) {
+    /** rebinds "children" links from one node to another
+     *
+     *        parentNode     -->      parentNode
+     *       /                       /
+     *    node              replacementNode
+     */
+    protected fun changeChild(node: someNode, parentNode: someNode?, replacementNode: someNode?) {
         when (parentNode) {
             null -> if (root == node) root = replacementNode
             else -> {
@@ -115,10 +124,8 @@ abstract class abstractTree<K: Comparable<K>, V, someNode: abstractNode<K, V, so
         while (true) {
             minNode = minNode?.leftChild ?: break
         }
-        when {
-            (minNode != null) -> return minNode
-            else -> return null
-        }
+        if (minNode != null) return minNode
+        return null
     }
 
     fun find(key: K): V? {
