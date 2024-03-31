@@ -1,4 +1,4 @@
-package trees
+package treesTests
 
 import trees.BSTree
 import org.junit.jupiter.api.Assertions.assertEquals
