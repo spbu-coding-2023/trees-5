@@ -58,6 +58,9 @@ abstract class abstractTree<K: Comparable<K>, V, someNode: abstractNode<K, V, so
         val nodeToDelete = findNodeByKey(key)
         if ((nodeToDelete == null) || (root == null)) return null
         val parentNode = findParent(nodeToDelete)
+        if ((nodeToDelete != root) && (parentNode == null)) {
+            throw IllegalArgumentException("Non-root should have parent")
+        }
         when {
             /* no children case */
             (nodeToDelete.leftChild == null && nodeToDelete.rightChild == null) -> {
