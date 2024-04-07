@@ -3,7 +3,7 @@ package trees
 import nodes.AVLNode
 import kotlin.math.max
 
-class AVLTree<K : Comparable<K>, V>: balancedTree<K, V, AVLNode<K, V>>() {
+class AVLTree<K : Comparable<K>, V> : balancedTree<K, V, AVLNode<K, V>>() {
     override fun createNewNode(key: K, value: V) = AVLNode(key, value)
 
     override fun insert(key: K, value: V) {
@@ -57,27 +57,29 @@ class AVLTree<K : Comparable<K>, V>: balancedTree<K, V, AVLNode<K, V>>() {
 
     /* balances a tree by performing left & right rotations
     if absolute value of balance factor is more than 1 */
-    override fun balance (curNode: AVLNode<K, V>, isAfterInsert: Boolean) {
+    override fun balance(curNode: AVLNode<K, V>, isAfterInsert: Boolean) {
         when (getBalanceFactor(curNode)) {
             -2 -> {
                 curNode.leftChild?.let { if (getBalanceFactor(it) == 1) rotateLeft(it, findParent(it)) }
                 rotateRight(curNode, findParent(curNode))
             }
+
             2 -> {
                 curNode.rightChild?.let { if (getBalanceFactor(it) == -1) rotateRight(it, findParent(it)) }
                 rotateLeft(curNode, findParent(curNode))
             }
+
             else -> updateHeight(curNode)
         }
         findParent(curNode)?.let { balance(it) }
     }
 
-    override fun rotateRight (node: AVLNode<K, V>, parentNode:  AVLNode<K, V>?) {
+    override fun rotateRight(node: AVLNode<K, V>, parentNode: AVLNode<K, V>?) {
         super.rotateRight(node, parentNode)
         updateHeight(node)
     }
 
-    override fun rotateLeft (node: AVLNode<K, V>, parentNode:  AVLNode<K, V>?) {
+    override fun rotateLeft(node: AVLNode<K, V>, parentNode: AVLNode<K, V>?) {
         super.rotateLeft(node, parentNode)
         updateHeight(node)
     }
