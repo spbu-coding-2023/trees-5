@@ -1,8 +1,8 @@
 package trees
 
-import nodes.abstractNode
+import nodes.AbstractNode
 
-abstract class abstractTree<K: Comparable<K>, V, someNode: abstractNode<K, V, someNode>> {
+abstract class AbstractTree<K : Comparable<K>, V, someNode : AbstractNode<K, V, someNode>> {
     protected var root: someNode? = null
 
     protected abstract fun createNewNode(key: K, value: V): someNode
@@ -73,8 +73,7 @@ abstract class abstractTree<K: Comparable<K>, V, someNode: abstractNode<K, V, so
                 if (nodeToDelete.leftChild == null) {
                     changeChild(nodeToDelete, parentNode, nodeToDelete.rightChild)
                     return nodeToDelete.rightChild
-                }
-                else {
+                } else {
                     changeChild(nodeToDelete, parentNode, nodeToDelete.leftChild)
                     return nodeToDelete.leftChild
                 }
@@ -148,7 +147,7 @@ abstract class abstractTree<K: Comparable<K>, V, someNode: abstractNode<K, V, so
     }
 
     protected fun traverse(curNode: someNode?, listOfNodes: MutableList<someNode>) {
-        if(curNode != null) {
+        if (curNode != null) {
             listOfNodes.add(curNode)
             traverse(curNode.leftChild, listOfNodes)
             traverse(curNode.rightChild, listOfNodes)

@@ -1,8 +1,8 @@
 package trees
 
-import nodes.abstractNode
+import nodes.AbstractNode
 
-abstract class balancedTree<K: Comparable<K>, V, someNode: abstractNode<K, V, someNode>>: abstractTree<K, V, someNode>() {
+abstract class BalancedTree<K : Comparable<K>, V, someNode: AbstractNode<K, V, someNode>> : AbstractTree<K, V, someNode>() {
     protected abstract fun balance(curNode: someNode, isAfterInsert: Boolean = true)
 
     protected open fun rotateRight(node: someNode, parentNode:  someNode?) {
