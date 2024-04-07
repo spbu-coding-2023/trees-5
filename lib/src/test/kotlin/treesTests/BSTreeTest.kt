@@ -2,12 +2,18 @@ package treesTests
 
 import trees.BSTree
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 
 class BSTreeTest {
+    private lateinit var tree: BSTree<Int, String>
+
+    @BeforeEach
+    fun setup() {
+        tree = BSTree()
+    }
     @Test
     fun `find node by key`() {
-        val tree = BSTree<Int, String>()
         tree.insert(4, "first kitten")
         tree.insert(2, "second kitten")
         tree.insert(5, "third kitten")
@@ -22,7 +28,6 @@ class BSTreeTest {
 
     @Test
     fun  `traverse bst tree`() {
-        val tree = BSTree<Int, String>()
         tree.insert(55, "happy")
         tree.insert(88, "nation")
         tree.insert(77, "living")
@@ -38,7 +43,6 @@ class BSTreeTest {
 
     @Test
     fun `insert root`() {
-        val tree = BSTree<Int, String>()
         tree.insert(100, "say hi to the root!")
 
         val expectedKeys: List<Int> = listOf(100)
@@ -48,7 +52,6 @@ class BSTreeTest {
 
     @Test
     fun `delete root`() {
-        val tree = BSTree<Int, String>()
         tree.insert(100, "hm.. looks like its gone")
         tree.delete(100)
 
@@ -59,7 +62,6 @@ class BSTreeTest {
 
     @Test
     fun `insert some nodes`() {
-        val tree = BSTree<Int, String>()
         tree.insert(44, "you")
         tree.insert(23, "are")
         tree.insert(58, "enough.")
@@ -74,7 +76,6 @@ class BSTreeTest {
 
     @Test
     fun `insert node with existing key`() {
-        val tree = BSTree<Int, String>()
         tree.insert(2, "oh")
         tree.insert(4, "potato")
         tree.insert(6, "only")
@@ -89,7 +90,6 @@ class BSTreeTest {
 
     @Test
     fun `delete node with non-existing key`() {
-        val tree = BSTree<Int, String>()
         tree.insert(12, "BFS")
         tree.insert(6, "DFS")
         tree.insert(15, "Floyd Warshall")
@@ -105,7 +105,6 @@ class BSTreeTest {
 
     @Test
     fun `delete node from an empty tree`() {
-        val tree = BSTree<Int, String>()
         tree.delete(5)
 
         val expectedKeys: List<Int> = listOf()
@@ -115,7 +114,6 @@ class BSTreeTest {
 
     @Test
     fun `delete node with no children`() {
-        val tree = BSTree<Int, String>()
         tree.insert(9, "because")
         tree.insert(7, "i")
         tree.insert(10, "envy")
@@ -131,7 +129,6 @@ class BSTreeTest {
 
     @Test
     fun `delete node with one right child`() {
-        val tree = BSTree<Int, String>()
         tree.insert(14, "what")
         tree.insert(12, "was")
         tree.insert(15, "in")
@@ -147,7 +144,6 @@ class BSTreeTest {
 
     @Test
     fun `delete node with one left child`() {
-        val tree = BSTree<Int, String>()
         tree.insert(9, "and")
         tree.insert(6, "now")
         tree.insert(15, "i")
@@ -163,7 +159,6 @@ class BSTreeTest {
 
     @Test
     fun `delete node with two children`() {
-        val tree = BSTree<Int, String>()
         tree.insert(4, "you")
         tree.insert(2, "reached")
         tree.insert(5, "the")
