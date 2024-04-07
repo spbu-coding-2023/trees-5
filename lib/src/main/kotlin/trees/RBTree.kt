@@ -3,7 +3,7 @@ package trees
 import nodes.Color
 import nodes.RBNode
 
-class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
+class RBTree<K : Comparable<K>, V> : balancedTree<K, V, RBNode<K, V>>() {
     private fun getGrandparent(node: RBNode<K, V>): RBNode<K, V>? {
         val parent = findParent(node) ?: return null
         val grandparent = findParent(parent)
@@ -37,8 +37,11 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
     override fun createNewNode(key: K, value: V): RBNode<K, V> = RBNode(key, value)
 
     override fun balance(curNode: RBNode<K, V>, isAfterInsert: Boolean) {
-        if (isAfterInsert) { balanceAfterInsert(curNode)}
-        else { balanceAfterDelete(curNode) }
+        if (isAfterInsert) {
+            balanceAfterInsert(curNode)
+        } else {
+            balanceAfterDelete(curNode)
+        }
     }
 
     private fun balanceAfterInsert(curNode: RBNode<K, V>) {
@@ -59,7 +62,8 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
         }
 
         val uncle = getUncle(insertedNode)
-        val grandparent = getGrandparent(insertedNode) ?: throw IllegalArgumentException("Every node by that point should have grandparent")
+        val grandparent = getGrandparent(insertedNode)
+            ?: throw IllegalArgumentException("Every node by that point should have grandparent")
 
         /* case 3: uncle is non-null and red (so both uncle and parent are red) */
         if ((uncle != null) && (uncle.color == Color.RED)) {
@@ -81,12 +85,13 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
         if ((insertedNode == parent.rightChild) && (parent == grandparent.leftChild)) {
             rotateLeft(parent, grandparent)
             parent = insertedNode
-            insertedNode = insertedNode.leftChild ?: throw IllegalArgumentException("Node should have child after left rotation")
-        }
-        else if ((insertedNode == parent.leftChild) && (parent == grandparent.rightChild)) {
+            insertedNode =
+                insertedNode.leftChild ?: throw IllegalArgumentException("Node should have child after left rotation")
+        } else if ((insertedNode == parent.leftChild) && (parent == grandparent.rightChild)) {
             rotateRight(parent, grandparent)
             parent = insertedNode
-            insertedNode = insertedNode.rightChild ?: throw IllegalArgumentException("Node should have right child after right rotation")
+            insertedNode = insertedNode.rightChild
+                ?: throw IllegalArgumentException("Node should have right child after right rotation")
         }
 
         /* case 5: grandparent, parent and node form a "line"
@@ -100,10 +105,9 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
         */
         parent.color = Color.BLACK
         grandparent.color = Color.RED
-        if ((insertedNode == parent.leftChild)&&(parent == grandparent.leftChild)) {
+        if ((insertedNode == parent.leftChild) && (parent == grandparent.leftChild)) {
             rotateRight(grandparent, findParent(grandparent))
-        }
-        else {
+        } else {
             rotateLeft(grandparent, findParent(grandparent))
         }
         return
@@ -114,7 +118,8 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
         val child: RBNode<K, V>?
         when {
             nodeToDelete.rightChild != null && nodeToDelete.leftChild != null -> {
-                child = findMinNodeInRight(nodeToDelete.rightChild) ?: throw IllegalArgumentException("Node must have right child")
+                child = findMinNodeInRight(nodeToDelete.rightChild)
+                    ?: throw IllegalArgumentException("Node must have right child")
                 val newNode = child
                 delete(child.key)
                 newNode.color = nodeToDelete.color
@@ -123,6 +128,7 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
                 changeChild(nodeToDelete, findParent(nodeToDelete), newNode)
                 return
             }
+
             nodeToDelete.rightChild != null -> child = nodeToDelete.rightChild
             nodeToDelete.leftChild != null -> child = nodeToDelete.leftChild
             else -> {
@@ -135,11 +141,13 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
                 deleteNode(nodeToDelete.key)
                 return
             }
+
             (nodeToDelete.color == Color.BLACK && child?.color == Color.RED) -> {
                 deleteNode(nodeToDelete.key)
                 child.color = Color.BLACK
                 return
             }
+
             else -> {
                 deleteNode(nodeToDelete.key)
                 if (child != null) balance(nodeToDelete, false)
@@ -163,8 +171,7 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
             if (node == parent.leftChild) {
                 val grandparent = getGrandparent(node)
                 rotateLeft(parent, grandparent)
-            }
-            else {
+            } else {
                 val grandparent = getGrandparent(node)
                 rotateRight(parent, grandparent)
             }
@@ -179,9 +186,10 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
          */
         sibling = getSibling(node)
         parent = findParent(node) ?: throw IllegalArgumentException("Parent cannot be null")
-        if(parent.color == Color.BLACK && (sibling?.color == Color.BLACK) &&
+        if (parent.color == Color.BLACK && (sibling?.color == Color.BLACK) &&
             (sibling.rightChild?.color == Color.BLACK || sibling.rightChild == null)
-            && (sibling.leftChild?.color == Color.BLACK || sibling.leftChild == null)) {
+            && (sibling.leftChild?.color == Color.BLACK || sibling.leftChild == null)
+        ) {
             sibling.color = Color.RED
             balanceAfterDelete(parent)
         }
@@ -195,8 +203,8 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
          */
         else if (parent.color == Color.RED && sibling?.color == Color.BLACK &&
             (sibling.rightChild?.color == Color.BLACK || sibling.rightChild == null)
-            && (sibling.leftChild?.color == Color.BLACK || sibling.leftChild == null))
-        {
+            && (sibling.leftChild?.color == Color.BLACK || sibling.leftChild == null)
+        ) {
             sibling.color = Color.RED
             parent.color = Color.BLACK
         }
@@ -210,13 +218,14 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
          */
         else {
             if (node == parent.leftChild && sibling?.color == Color.BLACK &&
-                (sibling.rightChild?.color == Color.BLACK || sibling.rightChild == null) && sibling.leftChild?.color == Color.RED) {
+                (sibling.rightChild?.color == Color.BLACK || sibling.rightChild == null) && sibling.leftChild?.color == Color.RED
+            ) {
                 sibling.color = Color.RED
                 sibling.leftChild?.color = Color.BLACK
                 rotateRight(sibling, parent)
-            }
-            else if (node == parent.rightChild && sibling?.color == Color.BLACK &&
-                sibling.rightChild?.color == Color.RED && (sibling.leftChild?.color == Color.BLACK || sibling.leftChild == null)) {
+            } else if (node == parent.rightChild && sibling?.color == Color.BLACK &&
+                sibling.rightChild?.color == Color.RED && (sibling.leftChild?.color == Color.BLACK || sibling.leftChild == null)
+            ) {
                 sibling.color = Color.RED
                 sibling.rightChild?.color = Color.BLACK
                 rotateLeft(sibling, parent)
@@ -238,8 +247,7 @@ class RBTree<K : Comparable<K>, V>: balancedTree<K, V, RBNode<K, V>>() {
             if (node == parent.leftChild) {
                 sibling.rightChild?.color = Color.BLACK
                 rotateLeft(parent, grandparent)
-            }
-            else {
+            } else {
                 sibling.leftChild?.color = Color.BLACK
                 rotateRight(parent, grandparent)
             }
