@@ -3,7 +3,7 @@ package trees
 import nodes.Color
 import nodes.RBNode
 
-class RBTree<K : Comparable<K>, V> : balancedTree<K, V, RBNode<K, V>>() {
+class RBTree<K : Comparable<K>, V> : BalancedTree<K, V, RBNode<K, V>>() {
     private fun getGrandparent(node: RBNode<K, V>): RBNode<K, V>? {
         val parent = findParent(node) ?: return null
         val grandparent = findParent(parent)

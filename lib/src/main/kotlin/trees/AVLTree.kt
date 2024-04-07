@@ -3,7 +3,7 @@ package trees
 import nodes.AVLNode
 import kotlin.math.max
 
-class AVLTree<K : Comparable<K>, V> : balancedTree<K, V, AVLNode<K, V>>() {
+class AVLTree<K : Comparable<K>, V> : BalancedTree<K, V, AVLNode<K, V>>() {
     override fun createNewNode(key: K, value: V) = AVLNode(key, value)
 
     override fun insert(key: K, value: V) {
