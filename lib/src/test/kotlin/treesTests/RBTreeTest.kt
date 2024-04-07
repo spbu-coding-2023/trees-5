@@ -3,13 +3,18 @@ package treesTests
 import nodes.Color
 import trees.RBTree
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 
 
 class RBTreeTest {
+    private lateinit var tree: RBTree<Int, String>
+    @BeforeEach
+    fun setup() {
+        tree = RBTree()
+    }
     @Test
     fun `find node by key`() {
-        val tree = RBTree<Int, String>()
         tree.insert(2,"Sofa")
         tree.insert(4,"Sonya")
         tree.insert(1,"Xenia")
@@ -21,7 +26,6 @@ class RBTreeTest {
 
     @Test
     fun `traverse rb tree`() {
-        val tree = RBTree<Int, String>()
         tree.insert(3,"i")
         tree.insert(2,"love")
         tree.insert(1,"making")
@@ -34,7 +38,6 @@ class RBTreeTest {
 
     @Test
     fun `insert node with existing key`() {
-        val tree = RBTree<Int, String>()
         tree.insert(1, "Kittens")
         tree.insert(2, "Sadness")
         tree.insert(3, "Puppies")
@@ -49,7 +52,6 @@ class RBTreeTest {
 
     @Test
     fun `insert root`() {
-        val tree = RBTree<Int, String>()
         tree.insert(8, "Infinity")
 
         val expectedKeysAndColors = listOf(Pair(8, Color.BLACK))
@@ -59,7 +61,6 @@ class RBTreeTest {
 
     @Test
     fun `insert a node with BLACK parent`() {
-        val tree = RBTree<Int, String>()
         tree.insert(10, "Sunny")
         tree.insert(8, "Cloudy")
         tree.insert(14, "Stormy")
@@ -74,7 +75,6 @@ class RBTreeTest {
 
     @Test
     fun `insert a node with RED parent and RED uncle`() {
-        val tree = RBTree<Int, String>()
         tree.insert(100, "Red")
         tree.insert(55, "Orange")
         tree.insert(111, "Yellow")
@@ -96,7 +96,6 @@ class RBTreeTest {
     */
     @Test
     fun `insert a node into a left triangle`() {
-        val tree = RBTree<Int, String>()
         tree.insert(50, "Apple")
         tree.insert(30, "Banana")
         tree.insert(40, "Grape")
@@ -108,7 +107,6 @@ class RBTreeTest {
 
     @Test
     fun `insert a node into a right triangle`() {
-        val tree = RBTree<Int, String>()
         tree.insert(49, "Chocolate")
         tree.insert(34, "Cookies")
         tree.insert(78, "Croissants")
@@ -131,7 +129,6 @@ class RBTreeTest {
     */
     @Test
     fun `insert a node into a left line`() {
-        val tree = RBTree<Int, String>()
         tree.insert(900, "folklore")
         tree.insert(90, "evermore")
         tree.insert(9, "midnights")
@@ -143,7 +140,6 @@ class RBTreeTest {
 
     @Test
     fun `insert a node into a right line`() {
-        val tree = RBTree<Int, String>()
         tree.insert(333, "Didn't")
         tree.insert(33, "the trees")
         tree.insert(3333, "tell us")
@@ -158,7 +154,6 @@ class RBTreeTest {
 
     @Test
     fun `delete node with non-existing key`() {
-        val tree = RBTree<Int, String>()
         tree.insert(10, "Yes")
         tree.insert(20, "No")
         tree.insert(30, "Not sure")
@@ -171,7 +166,6 @@ class RBTreeTest {
 
     @Test
     fun `delete node from an empty tree`() {
-        val tree = RBTree<Int, String>()
         tree.delete(5)
 
         val expectedKeysAndColors: List<Pair<Int, Color>> = listOf()
@@ -181,7 +175,6 @@ class RBTreeTest {
 
     @Test
     fun `delete RED node with two children (left subtree & right leaf)`() {
-        val tree = RBTree<Int, String>()
         tree.insert(20, "I spy")
         tree.insert(10, "with")
         tree.insert(40, "my")
@@ -198,7 +191,6 @@ class RBTreeTest {
 
     @Test
     fun `delete RED node with no children`() {
-        val tree = RBTree<Int, String>()
         tree.insert(20, "I")
         tree.insert(10, "don't")
         tree.insert(40, "wanna")
@@ -215,7 +207,6 @@ class RBTreeTest {
 
     @Test
     fun `delete BLACK node with one right RED child`() {
-        val tree = RBTree<Int, String>()
         tree.insert(20, "Is")
         tree.insert(10, "it")
         tree.insert(40, "really")
@@ -232,7 +223,6 @@ class RBTreeTest {
 
     @Test
     fun `delete BLACK node with one left RED child`() {
-        val tree = RBTree<Int, String>()
         tree.insert(20, "How")
         tree.insert(10, "many")
         tree.insert(40, "easter")
@@ -249,7 +239,6 @@ class RBTreeTest {
 
     @Test
     fun `delete BLACK node with no children and RED sibling`() {
-        val tree = RBTree<Int, String>()
         tree.insert(20, "find")
         tree.insert(10, "in")
         tree.insert(40, "these")
@@ -266,7 +255,6 @@ class RBTreeTest {
 
     @Test
     fun `delete BLACK node with two children (left subtree & right leaf)`() {
-        val tree = RBTree<Int, String>()
         tree.insert(100, "I")
         tree.insert(80, "hope")
         tree.insert(200, "you")
@@ -283,7 +271,6 @@ class RBTreeTest {
 
     @Test
     fun `delete left BLACK node with RED right child`() {
-        val tree = RBTree<Int, String>()
         tree.insert(100, "much")
         tree.insert(80, "as")
         tree.insert(200, "I")
@@ -300,7 +287,6 @@ class RBTreeTest {
 
     @Test
     fun `delete BLACK node with no children and BLACK sibling`() {
-        val tree = RBTree<Int, String>()
         tree.insert(111, "running")
         tree.insert(222, "out")
         tree.insert(88, "of")
@@ -315,7 +301,6 @@ class RBTreeTest {
 
     @Test
     fun `delete left RED node with no children`() {
-        val tree = RBTree<Int, String>()
         tree.insert(23, "Red")
         tree.insert(11, "Orange")
         tree.insert(37, "Yellow")
@@ -330,7 +315,6 @@ class RBTreeTest {
 
     @Test
     fun `delete RED node with two BLACK children`() {
-        val tree = RBTree<Int, String>()
         tree.insert(23, "Red")
         tree.insert(37, "Orange")
         tree.insert(20, "Yellow")
@@ -345,7 +329,6 @@ class RBTreeTest {
 
     @Test
     fun `delete BLACK node with one RED child`() {
-        val tree = RBTree<Int, String>()
         tree.insert(5, "Red")
         tree.insert(3, "Orange")
         tree.insert(6, "Yellow")
@@ -362,7 +345,6 @@ class RBTreeTest {
 
     @Test
     fun `delete BLACK node with two children`() {
-        val tree = RBTree<Int, String>()
         tree.insert(5, "Red")
         tree.insert(3, "Orange")
         tree.insert(6, "Yellow")
@@ -377,7 +359,6 @@ class RBTreeTest {
 
     @Test
     fun `delete BLACK node with no children and BLACK sibling which has left RED child`() {
-        val tree = RBTree<Int, String>()
         tree.insert(3, "Red")
         tree.insert(1, "Orange")
         tree.insert(5, "Yellow")
@@ -391,7 +372,6 @@ class RBTreeTest {
 
     @Test
     fun `delete BLACK node with no children and BLACK sibling which has right RED child`() {
-        val tree = RBTree<Int, String>()
         tree.insert(3, "Red")
         tree.insert(1, "Orange")
         tree.insert(5, "Yellow")
@@ -405,7 +385,6 @@ class RBTreeTest {
 
     @Test
     fun `delete BLACK node with no children and RED sibling which has only BLACK children`() {
-        val tree = RBTree<Int, String>()
         tree.insert(6, "Red")
         tree.insert(4, "Orange")
         tree.insert(7, "Yellow")
