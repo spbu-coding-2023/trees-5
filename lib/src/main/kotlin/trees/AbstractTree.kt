@@ -59,16 +59,16 @@ abstract class AbstractTree<K : Comparable<K>, V, someNode : AbstractNode<K, V, 
         if ((nodeToDelete == null) || (root == null)) return null
         val parentNode = findParent(nodeToDelete)
         if ((nodeToDelete != root) && (parentNode == null)) {
-            throw IllegalArgumentException("Non-root should have parent")
+            throw IllegalArgumentException("Non-root node should have parent")
         }
         when {
-            /* no children case */
+            /* node has no children */
             (nodeToDelete.leftChild == null && nodeToDelete.rightChild == null) -> {
                 changeChild(nodeToDelete, parentNode, null)
                 return null
             }
 
-            /* 1 child case */
+            /* node has 1 child */
             (nodeToDelete.leftChild == null || nodeToDelete.rightChild == null) -> {
                 if (nodeToDelete.leftChild == null) {
                     changeChild(nodeToDelete, parentNode, nodeToDelete.rightChild)
@@ -79,7 +79,7 @@ abstract class AbstractTree<K : Comparable<K>, V, someNode : AbstractNode<K, V, 
                 }
             }
 
-            /* 2 children case */
+            /* node has 2 children */
             else -> {
                 val replacementNode = findMinNodeInRight(nodeToDelete.rightChild)
                     ?: throw IllegalArgumentException ("Node with 2 children must have a right child")
@@ -102,7 +102,7 @@ abstract class AbstractTree<K : Comparable<K>, V, someNode : AbstractNode<K, V, 
         return null
     }
 
-    /** rebinds "children" links from one node to another
+    /** rebinds "children" link of a ParentNode from one node to another
      *
      *        parentNode     -->      parentNode
      *       /                       /
@@ -118,8 +118,9 @@ abstract class AbstractTree<K : Comparable<K>, V, someNode : AbstractNode<K, V, 
         }
     }
 
-    protected fun findMinNodeInRight(subtree: someNode?): someNode? {
-        var minNode = subtree
+    /* finds node with the minimum key in given right subtree*/
+    protected fun findMinNodeInRight(rightSubtree: someNode?): someNode? {
+        var minNode = rightSubtree
         while (true) {
             minNode = minNode?.leftChild ?: break
         }
