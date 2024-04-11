@@ -1,12 +1,18 @@
-## Table of contents
-- [About the project](#about-the-project)
-- [How to use](#how-to-use)
-- [License](#license)
-- [Developers and contacts](#developers-and-contacts)
-
 ## About the project
 
 This library allows you to use three types of binary search trees: simple, AVL and Red-Black tree. [AVL](https://en.wikipedia.org/wiki/AVL_tree) and [Red-Black](https://en.wikipedia.org/wiki/Red–black_tree) tree implement their natural balancing.
+
+## Getting started
+1. Download our lib from [Releases](https://github.com/spbu-coding-2023/trees-5/releases)
+2. Open your project
+3. Go to `File > New > Module from Existing Sources...`
+4. Choose the lib you downloaded
+5. Add this in your program:
+
+```
+  import trees.*
+  ```
+You can replace `*` with any specific tree
 
 ## How to use
 There are 4 public methods you can use for each tree:
@@ -57,9 +63,10 @@ For `RBTree` it saves node's key and color:
   ```
 
 Have fun!
-## License
-The product is distributed under MIT license. Check LICENSE for more information
 ## Developers and contacts
 * [p1onerka](https://github.com/p1onerka) (tg @p10nerka)  
 * [sofyak0zyreva](https://github.com/sofyak0zyreva) (tg @soffque)  
 * [shvorobsofia](https://github.com/shvorobsofia) (tg @fshv23)  
+
+## License
+The product is distributed under MIT license. Check LICENSE for more information
