@@ -97,10 +97,7 @@ abstract class AbstractTree<K : Comparable<K>, V, someNode : AbstractNode<K, V, 
         while (curNode != null) {
             if (curNode.key == node.key) return null
             if (curNode.leftChild?.key == node.key || curNode.rightChild?.key == node.key) return curNode
-            curNode = when {
-                curNode.key < node.key -> curNode.rightChild
-                else -> curNode.leftChild
-            }
+            curNode = if (curNode.key < node.key) curNode.rightChild else curNode.leftChild
         }
         return null
     }
@@ -112,12 +109,12 @@ abstract class AbstractTree<K : Comparable<K>, V, someNode : AbstractNode<K, V, 
      *    node              replacementNode
      */
     protected fun changeChild(node: someNode, parentNode: someNode?, replacementNode: someNode?) {
-        when (parentNode) {
-            null -> if (root == node) root = replacementNode
-            else -> {
-                if (parentNode.rightChild == node) parentNode.rightChild = replacementNode
-                else if (parentNode.leftChild == node) parentNode.leftChild = replacementNode
-            }
+        if (parentNode == null) {
+            if (root == node)  root = replacementNode
+        }
+        else {
+            if (parentNode.rightChild == node) parentNode.rightChild = replacementNode
+            else if (parentNode.leftChild == node) parentNode.leftChild = replacementNode
         }
     }
 
